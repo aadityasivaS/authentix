@@ -1,6 +1,6 @@
 # AUTHENTIX frontend
 
-React + Vite dashboard for creating transaction requests, viewing risk analysis, and initiating executive authorization.
+React + Vite + Tailwind CSS dashboard for creating transaction requests, viewing risk analysis, and initiating executive authorization.
 
 ## Structure
 
@@ -11,7 +11,7 @@ src/
 ├── utils/wallet.ts  # MetaMask signing and optional smart-contract submission
 ├── App.tsx          # MVP dashboard and demo flow
 ├── main.tsx         # React entry point
-└── style.css        # MVP styling
+└── style.css        # Tailwind import, theme tokens, and base/component styles
 ```
 
 ## Responsibilities
@@ -41,5 +41,7 @@ Leave `VITE_CONTRACT_ADDRESS` blank for the no-wallet demo flow. Set it to a dep
 npm install
 npm run dev
 ```
+
+Tailwind uses the Vite plugin (Tailwind v4), so the MVP does not need a `tailwind.config.js`. Use utility classes or the small reusable component classes in `src/style.css`.
 
 Read `../docs/api-contract.md` before changing API payloads or statuses.
