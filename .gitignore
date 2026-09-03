@@ -1,0 +1,67 @@
+# Secrets and machine-specific configuration
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.pem
+*.key
+
+# Python / FastAPI
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+.venv/
+venv/
+ENV/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+*.egg-info/
+.eggs/
+build/
+
+# Node / Vite / TypeScript
+node_modules/
+dist/
+.vite/
+*.tsbuildinfo
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Hardhat generated files
+artifacts/
+cache/
+typechain-types/
+coverage/
+gas-reporter-output.json
+
+# Local database and uploaded demo media
+data/
+db/
+uploads/
+*.sqlite
+*.sqlite3
+*.db
+
+# Editor and operating-system files
+.vscode/
+.idea/
+*.iml
+*.code-workspace
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Temporary files and logs
+*.log
+*.tmp
+*.swp
+*.swo
