@@ -1,8 +1,10 @@
-import asyncio
 import base64
+import importlib
+import os
+import tempfile
 import uuid
+from pathlib import Path
 from typing import Any, Protocol
-import httpx
 from app.core.config import Settings
 
 
@@ -23,8 +25,6 @@ class MockRealityDefender:
 
 
 class RealityDefenderClient:
-    base_url = "https://api.prd.realitydefender.xyz/api"
-
     def __init__(self, settings: Settings) -> None:
         self.api_key = settings.reality_defender_api_key
         self.poll_seconds = settings.reality_defender_poll_seconds
@@ -35,33 +35,43 @@ class RealityDefenderClient:
         if not audio_base64 or not filename:
             raise ValueError("An audio file is required in real mode")
         try:
-            media = base64.b64decode(audio_base64)
+            media = base64.b64decode(audio_base64, validate=True)
         except ValueError as exc:
             raise ValueError("audioBase64 is not valid base64") from exc
-        headers = {"X-API-KEY": self.api_key, "Content-Type": "application/json"}
-        async with httpx.AsyncClient(timeout=30) as client:
-            response = await client.post(f"{self.base_url}/files/aws-presigned", headers=headers, json={"fileName": filename})
-            response.raise_for_status()
-            upload = response.json()
-            # Reality Defender responses may wrap upload values in `response`.
-            upload_details = upload.get("response", upload)
-            signed_url = upload_details.get("url") or upload_details.get("signedUrl")
-            request_id = upload_details.get("requestId") or upload_details.get("request_id")
-            if not signed_url or not request_id:
-                raise RuntimeError("Reality Defender presigned upload response was incomplete")
-            put = await client.put(signed_url, content=media, headers={})
-            put.raise_for_status()
-            for _ in range(15):
-                result = await client.get(f"{self.base_url}/media/users/{request_id}", headers=headers)
-                result.raise_for_status()
-                payload = result.json()
-                summary = payload.get("resultsSummary") or {}
-                status = summary.get("status")
-                if status in {"AUTHENTIC", "FAKE", "SUSPICIOUS", "NOT_APPLICABLE", "UNABLE_TO_EVALUATE"}:
-                    metadata = summary.get("metadata") or {}
-                    return {"provider": "Reality Defender", "mode": "real", "requestId": request_id, "status": status, "score": metadata.get("finalScore"), "evaluationIssue": metadata.get("reasons") or summary.get("error")}
-                await asyncio.sleep(self.poll_seconds)
-        raise RuntimeError("Reality Defender analysis timed out")
+        temporary_path: str | None = None
+        try:
+            sdk = importlib.import_module("realitydefender")
+        except ModuleNotFoundError as exc:
+            raise RuntimeError("The realitydefender package is not installed; install backend requirements") from exc
+        client = sdk.RealityDefender(api_key=self.api_key)
+        try:
+            suffix = Path(filename).suffix
+            with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as temporary_file:
+                temporary_file.write(media)
+                temporary_path = temporary_file.name
+            upload = await client.upload(file_path=temporary_path)
+            request_id = upload["request_id"]
+            result = await client.get_result(
+                request_id,
+                polling_interval=max(1, int(self.poll_seconds * 1000)),
+            )
+            score = result.get("score")
+            if score is not None:
+                score = score * 100
+            return {
+                "provider": "Reality Defender",
+                "mode": "real",
+                "requestId": request_id,
+                "status": result["status"],
+                "score": score,
+                "evaluationIssue": None,
+            }
+        except Exception as exc:
+            raise RuntimeError(f"Reality Defender SDK analysis failed: {exc}") from exc
+        finally:
+            if temporary_path:
+                os.unlink(temporary_path)
+            await client.cleanup()
 
 
 def get_analyzer(settings: Settings) -> DeepfakeAnalyzer:

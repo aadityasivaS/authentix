@@ -17,7 +17,7 @@ tests/               # Service-level tests
 
 ## Important modules
 
-- `services/reality_defender.py`: one analyzer interface with live and deterministic mock implementations.
+- `services/reality_defender.py`: one analyzer interface with live Reality Defender SDK and deterministic mock implementations.
 - `services/risk_engine.py`: combines AI score with transaction-context signals.
 - `services/transaction_hash.py`: source of truth for hashing the exact approved transaction fields.
 - `repositories/`: writes `transactions` and append-only `audit_events`; uses temporary in-memory data when MongoDB is not configured.
@@ -34,7 +34,7 @@ REALITY_DEFENDER_MODE=mock
 REALITY_DEFENDER_API_KEY=
 ```
 
-`mock` mode requires no external key. Set `REALITY_DEFENDER_MODE=real` only with a valid API key and audio-file request payload. Never expose this key to the frontend.
+`mock` mode requires no external key. Set `REALITY_DEFENDER_MODE=real` only with a valid API key and audio-file request payload. The live implementation uses the `realitydefender` Python SDK. Never expose this key to the frontend.
 
 ## Run and test
 
