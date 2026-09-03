@@ -10,7 +10,10 @@ contracts/                     # Solidity source
 scripts/deploy.ts              # Deployment script
 test/                          # Hardhat contract tests
 hardhat.config.ts              # Compiler and optional Sepolia network config
+tsconfig.json                  # Hardhat-specific TypeScript settings
 ```
+
+The npm scripts explicitly load this folder's `tsconfig.json`; do not run Hardhat from the repository root.
 
 ## Contract behavior
 

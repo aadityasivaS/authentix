@@ -1,6 +1,6 @@
 {
   "name": "authentix-contracts",
   "private": true,
-  "scripts": { "compile": "hardhat compile", "test": "hardhat test", "node": "hardhat node", "deploy": "hardhat run scripts/deploy.ts --network sepolia", "deploy:local": "hardhat run scripts/deploy.ts --network localhost" },
+  "scripts": { "compile": "hardhat --tsconfig ./tsconfig.json compile", "test": "hardhat --tsconfig ./tsconfig.json test", "node": "hardhat --tsconfig ./tsconfig.json node", "deploy": "hardhat --tsconfig ./tsconfig.json run scripts/deploy.ts --network sepolia", "deploy:local": "hardhat --tsconfig ./tsconfig.json run scripts/deploy.ts --network localhost" },
   "devDependencies": { "@nomicfoundation/hardhat-toolbox": "^5.0.0", "dotenv": "^16.4.5", "hardhat": "^2.22.10", "ts-node": "^10.9.2", "typescript": "^5.6.3" }
 }
