@@ -68,6 +68,7 @@ function createMockTransaction(input: { amount: number; beneficiary: string; ben
     amount: input.amount,
     currency: "INR",
     beneficiary: input.beneficiary,
+    beneficiaryAccount: input.beneficiaryAccount,
     status,
     transactionHash: "MOCK-TRANSACTION-HASH",
     blockchainTxHash: null,
