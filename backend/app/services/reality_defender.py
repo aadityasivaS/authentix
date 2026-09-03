@@ -43,8 +43,10 @@ class RealityDefenderClient:
             response = await client.post(f"{self.base_url}/files/aws-presigned", headers=headers, json={"fileName": filename})
             response.raise_for_status()
             upload = response.json()
-            signed_url = upload.get("url") or upload.get("signedUrl")
-            request_id = upload.get("requestId") or upload.get("request_id")
+            # Reality Defender responses may wrap upload values in `response`.
+            upload_details = upload.get("response", upload)
+            signed_url = upload_details.get("url") or upload_details.get("signedUrl")
+            request_id = upload_details.get("requestId") or upload_details.get("request_id")
             if not signed_url or not request_id:
                 raise RuntimeError("Reality Defender presigned upload response was incomplete")
             put = await client.put(signed_url, content=media, headers={})

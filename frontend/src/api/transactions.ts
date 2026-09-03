@@ -1,7 +1,16 @@
 import type { Scenario, Transaction } from "../types/transaction";
 const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:8000/api/v1";
 
-export async function analyzeTransaction(input: { amount: number; beneficiary: string; beneficiaryAccount: string; demoScenario: Scenario }) : Promise<Transaction> {
+export type AnalyzeInput = {
+  amount: number;
+  beneficiary: string;
+  beneficiaryAccount: string;
+  demoScenario: Scenario;
+  audioBase64?: string;
+  audioFilename?: string;
+};
+
+export async function analyzeTransaction(input: AnalyzeInput): Promise<Transaction> {
   const scenario = input.demoScenario;
   const flags = scenario === "deepfake_attack" ? { isNewBeneficiary: true, isUnusualTime: true, isUnknownDevice: true, urgencyDetected: true } : scenario === "suspicious" ? { isNewBeneficiary: true, isUnusualTime: true, isUnknownDevice: false, urgencyDetected: false } : { isNewBeneficiary: false, isUnusualTime: false, isUnknownDevice: false, urgencyDetected: false };
   const response = await fetch(`${baseUrl}/transactions/analyze`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...input, currency: "INR", ...flags }) });

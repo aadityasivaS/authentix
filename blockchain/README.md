@@ -44,4 +44,24 @@ npm test
 npm run deploy
 ```
 
+## Local development chain
+
+Use this workflow to test the contract without a public network, API, or MongoDB.
+
+Terminal 1 — start and leave the local Hardhat blockchain running:
+
+```powershell
+cd blockchain
+npm run node
+```
+
+Terminal 2 — deploy to that local chain:
+
+```powershell
+cd blockchain
+npm run deploy:local
+```
+
+`deploy:local` is an alias for deployment to the local `localhost` network. Copy the printed contract address into `frontend/.env` as `VITE_CONTRACT_ADDRESS` only when you want to connect the dashboard through MetaMask.
+
 After deployment, copy the deployed contract address to `frontend/.env` as `VITE_CONTRACT_ADDRESS`. Do not commit `.env`, RPC credentials, or private keys.

@@ -7,33 +7,139 @@
 }
 
 @layer base {
-  body { @apply m-0 min-w-80 bg-ink font-sans text-slate-100; }
-  button, input, select { font: inherit; }
+  body {
+    @apply m-0 min-w-80 bg-ink font-sans text-slate-100;
+  }
+  button,
+  input,
+  select {
+    font: inherit;
+  }
 }
 
 @layer components {
-  .card { @apply rounded-2xl border border-slate-700 bg-panel p-6 shadow-2xl shadow-black/20; }
-  .primary-button { @apply rounded-lg bg-teal px-4 py-2.5 font-bold text-slate-950 transition hover:bg-teal/90 disabled:cursor-not-allowed disabled:opacity-60; }
+  .card {
+    @apply rounded-2xl border border-slate-700 bg-panel p-6 shadow-2xl shadow-black/20;
+  }
+  .primary-button {
+    @apply rounded-lg bg-teal px-4 py-2.5 font-bold text-slate-950 transition hover:bg-teal/90 disabled:cursor-not-allowed disabled:opacity-60;
+  }
 }
 
 /* Existing MVP layout; new screens can prefer Tailwind utility classes. */
-:root { font-family: Inter, system-ui, sans-serif; color: #e7edf8; background: #09111f; }
-* { box-sizing: border-box; }
-main { max-width: 760px; margin: auto; padding: 36px 18px; }
-header { display: grid; gap: 5px; margin-bottom: 28px; }
-header span { color: #54d5c6; font-weight: 800; letter-spacing: .14em; }
-header small { color: #9eafc5; }
-h1, h2 { margin-top: 0; }
-form { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-label { display: grid; gap: 6px; color: #b9c7db; }
-input, select, button { border-radius: 7px; padding: 10px; }
-input, select { background: #0a1424; color: inherit; border: 1px solid #344966; }
-button { background: #54d5c6; color: #06251f; border: 0; font-weight: 700; cursor: pointer; }
-form button { grid-column: 1 / -1; }
-.deny { background: #ff8c9a; }
-.title { display: flex; justify-content: space-between; gap: 12px; }
-b { color: #ffcf6e; }
-code { display: block; overflow-wrap: anywhere; color: #9ee7de; }
-.actions { display: flex; gap: 10px; }
-.error { color: #ff9ca8; }
-@media (max-width: 600px) { form { grid-template-columns: 1fr; } }
+:root {
+  font-family: Inter, system-ui, sans-serif;
+  color: #e7edf8;
+  background: #09111f;
+}
+* {
+  box-sizing: border-box;
+}
+main {
+  max-width: 760px;
+  margin: auto;
+  padding: 36px 18px;
+}
+header {
+  display: grid;
+  gap: 5px;
+  margin-bottom: 28px;
+}
+header span {
+  color: #54d5c6;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+header small {
+  color: #9eafc5;
+}
+h1,
+h2 {
+  margin-top: 0;
+}
+form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+label {
+  display: grid;
+  gap: 6px;
+  color: #b9c7db;
+}
+input,
+select,
+button {
+  border-radius: 7px;
+  padding: 10px;
+}
+input,
+select {
+  background: #0a1424;
+  color: inherit;
+  border: 1px solid #344966;
+}
+button {
+  background: #54d5c6;
+  color: #06251f;
+  border: 0;
+  font-weight: 700;
+  cursor: pointer;
+}
+form button {
+  grid-column: 1 / -1;
+}
+.deny {
+  background: #ff8c9a;
+}
+.title {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+b {
+  color: #ffcf6e;
+}
+code {
+  display: block;
+  overflow-wrap: anywhere;
+  color: #9ee7de;
+}
+.actions {
+  display: flex;
+  gap: 10px;
+}
+.audio-input {
+  grid-column: 1 / -1;
+  border: 1px solid #344966;
+  border-radius: 8px;
+  padding: 12px;
+  color: #b9c7db;
+}
+.audio-input p {
+  margin: 6px 0 12px;
+  font-size: 0.9rem;
+}
+.audio-input input {
+  width: 100%;
+  margin-bottom: 10px;
+}
+.secondary {
+  background: #b9c7db;
+  color: #09111f;
+}
+.audio-name {
+  color: #9ee7de;
+  overflow-wrap: anywhere;
+}
+.live {
+  color: #54d5c6;
+}
+.error {
+  color: #ff9ca8;
+}
+@media (max-width: 600px) {
+  form {
+    grid-template-columns: 1fr;
+  }
+}
