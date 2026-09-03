@@ -1,0 +1,21 @@
+file,speaker,label
+51.wav,Dave Chappelle,bona-fide
+71.wav,Jimmy Carter,bona-fide
+344.wav,Kamala Harris,spoof
+729.wav,Billie Eilish,bona-fide
+858.wav,Jimmy Carter,bona-fide
+1159.wav,Kamala Harris,bona-fide
+1667.wav,Kamala Harris,bona-fide
+3381.wav,Kamala Harris,spoof
+4243.wav,Dave Chappelle,spoof
+4453.wav,William F. Buckley,spoof
+4734.wav,Jimmy Carter,spoof
+5268.wav,Billie Eilish,bona-fide
+5490.wav,Billie Eilish,spoof
+6018.wav,William F. Buckley,bona-fide
+6929.wav,Jimmy Carter,spoof
+7099.wav,Dave Chappelle,bona-fide
+7801.wav,Dave Chappelle,spoof
+8531.wav,William F. Buckley,spoof
+9532.wav,William F. Buckley,bona-fide
+12142.wav,Billie Eilish,spoof
