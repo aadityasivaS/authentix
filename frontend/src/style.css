@@ -9,6 +9,8 @@
 @layer base {
   body {
     @apply m-0 min-w-80 bg-ink font-sans text-slate-100;
+    min-height: 100vh;
+    background: radial-gradient(circle at top right, #172b42 0, #09111f 42rem);
   }
   button,
   input,
@@ -38,7 +40,7 @@
 main {
   max-width: 760px;
   margin: auto;
-  padding: 36px 18px;
+  padding: 48px 18px 64px;
 }
 header {
   display: grid;
@@ -63,6 +65,13 @@ h1,
 h2 {
   margin-top: 0;
 }
+h1 {
+  margin-bottom: 24px;
+  font-size: clamp(1.6rem, 4vw, 2rem);
+}
+h2 {
+  font-size: 1.35rem;
+}
 form {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -72,6 +81,8 @@ label {
   display: grid;
   gap: 6px;
   color: #b9c7db;
+  font-size: 0.92rem;
+  font-weight: 600;
 }
 input,
 select,
@@ -109,6 +120,20 @@ select {
   background: #0a1424;
   color: inherit;
   border: 1px solid #344966;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+input:focus,
+select:focus,
+button:focus-visible {
+  outline: 2px solid #54d5c6;
+  outline-offset: 2px;
+}
+input:focus,
+select:focus {
+  border-color: #54d5c6;
+  box-shadow: 0 0 0 3px rgb(84 213 198 / 12%);
 }
 button {
   background: #54d5c6;
@@ -116,17 +141,54 @@ button {
   border: 0;
   font-weight: 700;
   cursor: pointer;
+  transition:
+    transform 160ms ease,
+    filter 160ms ease;
+}
+button:hover:not(:disabled) {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+button:disabled {
+  cursor: wait;
+  opacity: 0.65;
 }
 form button {
   grid-column: 1 / -1;
+}
+.analyze-button {
+  min-height: 44px;
+}
+.spinner {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.5em;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  vertical-align: -0.15em;
+  animation: spin 0.75s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 .deny {
   background: #ff8c9a;
 }
 .title {
   display: flex;
+  align-items: baseline;
   justify-content: space-between;
   gap: 12px;
+}
+.card + .card {
+  margin-top: 20px;
+}
+.result {
+  border-color: #2c5f6a;
 }
 b {
   color: #ffcf6e;
@@ -138,6 +200,7 @@ code {
 }
 .actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
 }
 .audio-input {
@@ -187,6 +250,15 @@ code {
 .error {
   color: #ff9ca8;
 }
+@media (prefers-reduced-motion: reduce) {
+  button,
+  input,
+  select,
+  .spinner {
+    transition: none;
+    animation: none;
+  }
+}
 @media (max-width: 600px) {
   .brand-row {
     align-items: flex-start;
@@ -194,5 +266,12 @@ code {
   }
   form {
     grid-template-columns: 1fr;
+  }
+  .card {
+    padding: 20px;
+  }
+  .title {
+    align-items: flex-start;
+    flex-direction: column;
   }
 }

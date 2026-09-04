@@ -292,8 +292,19 @@ export default function App() {
               </p>
             ) : null}
           </fieldset>
-          <button disabled={loading}>
-            {loading ? "Analyzing…" : "Analyze request"}
+          <button
+            className="analyze-button"
+            disabled={loading}
+            aria-busy={loading}
+          >
+            {loading ? (
+              <>
+                <span className="spinner" aria-hidden="true" />
+                Analyzing…
+              </>
+            ) : (
+              "Analyze request"
+            )}
           </button>
         </form>
         {error ? <p className="error">{error}</p> : null}
