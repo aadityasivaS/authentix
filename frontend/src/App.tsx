@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import {
   analyzeTransaction,
   recordOnChain,
@@ -6,7 +6,11 @@ import {
 } from "./api/transactions";
 import type { Scenario, Transaction } from "./types/transaction";
 import { fileToBase64 } from "./utils/audio";
-import { signAndRecord } from "./utils/wallet";
+import {
+  connectWallet,
+  getConnectedWallet,
+  signAndRecord,
+} from "./utils/wallet";
 import "./style.css";
 
 const scenarioSignals = {
@@ -37,6 +41,38 @@ export default function App() {
   const [transaction, setTransaction] = useState<Transaction | null>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [walletAddress, setWalletAddress] = useState<string | null>(null);
+  const [connecting, setConnecting] = useState(false);
+
+  useEffect(() => {
+    getConnectedWallet()
+      .then(setWalletAddress)
+      .catch(() => setWalletAddress(null));
+    const ethereum = window.ethereum;
+    if (!ethereum) return;
+    const handleAccountsChanged = (accounts: string[]) =>
+      setWalletAddress(accounts[0] ?? null);
+    ethereum.on?.("accountsChanged", handleAccountsChanged);
+    return () =>
+      ethereum.removeListener?.("accountsChanged", handleAccountsChanged);
+  }, []);
+
+  async function authenticateWallet() {
+    setError("");
+    setConnecting(true);
+    try {
+      setWalletAddress(await connectWallet());
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Wallet connection failed");
+    } finally {
+      setConnecting(false);
+    }
+  }
+
+  function signOutWallet() {
+    setWalletAddress(null);
+    setError("");
+  }
 
   function chooseAudio(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0] ?? null;
@@ -77,6 +113,10 @@ export default function App() {
 
   async function decide(decision: "approved" | "denied") {
     if (!transaction) return;
+    if (!walletAddress) {
+      setError("Connect MetaMask before authorizing this transaction.");
+      return;
+    }
     try {
       const liveWallet = Boolean(import.meta.env.VITE_CONTRACT_ADDRESS);
       if (liveWallet) {
@@ -99,11 +139,44 @@ export default function App() {
   return (
     <main>
       <header>
-        <span>AUTHENTIX</span>
+        <div className="brand-row">
+          <span>AUTHENTIX</span>
+          {walletAddress ? (
+            <div className="wallet-actions">
+              <span className="wallet-address">
+                {walletAddress.slice(0, 6)}...{walletAddress.slice(-4)}
+              </span>
+              <button
+                className="wallet-button signout-button"
+                type="button"
+                onClick={signOutWallet}
+              >
+                Sign out
+              </button>
+            </div>
+          ) : (
+            <button
+              className="wallet-button"
+              type="button"
+              onClick={authenticateWallet}
+              disabled={connecting}
+            >
+              {connecting ? "Connecting..." : "Connect MetaMask"}
+            </button>
+          )}
+        </div>
         <small>
-          Exact transaction authorization, not just identity verification.
+          {walletAddress
+            ? "Executive wallet authenticated"
+            : "Connect an executive wallet to authorize transactions"}
         </small>
       </header>
+      {!walletAddress ? (
+        <p className="wallet-notice">
+          Analysis is available without a wallet. MetaMask is required for
+          executive approval or denial.
+        </p>
+      ) : null}
       <section className="card">
         <h1>Create transaction request</h1>
         <form onSubmit={analyze}>
@@ -198,8 +271,8 @@ export default function App() {
           <fieldset className="audio-input">
             <legend>Audio for Reality Defender</legend>
             <p>
-              Upload a labelled audio clip from your file system. Required when
-              backend mode is <code>real</code>; optional in mock mode.
+              Upload a labelled audio clip. Required in live mode; optional in
+              mock mode.
             </p>
             <input type="file" accept="audio/*" onChange={chooseAudio} />
             <div className="actions">

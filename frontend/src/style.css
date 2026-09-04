@@ -45,6 +45,12 @@ header {
   gap: 5px;
   margin-bottom: 28px;
 }
+.brand-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
 header span {
   color: #54d5c6;
   font-weight: 800;
@@ -72,6 +78,31 @@ select,
 button {
   border-radius: 7px;
   padding: 10px;
+}
+.wallet-button {
+  background: transparent;
+  color: #9ee7de;
+  border: 1px solid #54d5c6;
+  white-space: nowrap;
+}
+.wallet-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.wallet-address {
+  color: #9ee7de;
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+}
+.signout-button {
+  color: #ffcf6e;
+  border-color: #ffcf6e;
+}
+.wallet-notice {
+  margin: -12px 0 18px;
+  color: #ffcf6e;
+  font-size: 0.9rem;
 }
 input,
 select {
@@ -157,6 +188,10 @@ code {
   color: #ff9ca8;
 }
 @media (max-width: 600px) {
+  .brand-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
   form {
     grid-template-columns: 1fr;
   }
