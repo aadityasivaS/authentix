@@ -9,8 +9,30 @@ import { fileToBase64 } from "./utils/audio";
 import { signAndRecord } from "./utils/wallet";
 import "./style.css";
 
+const scenarioSignals = {
+  legitimate: {
+    isNewBeneficiary: false,
+    isUnusualTime: false,
+    isUnknownDevice: false,
+    urgencyDetected: false,
+  },
+  suspicious: {
+    isNewBeneficiary: true,
+    isUnusualTime: true,
+    isUnknownDevice: false,
+    urgencyDetected: false,
+  },
+  deepfake_attack: {
+    isNewBeneficiary: true,
+    isUnusualTime: true,
+    isUnknownDevice: true,
+    urgencyDetected: true,
+  },
+};
+
 export default function App() {
   const [scenario, setScenario] = useState<Scenario>("legitimate");
+  const [signals, setSignals] = useState(scenarioSignals.legitimate);
   const [audio, setAudio] = useState<File | null>(null);
   const [transaction, setTransaction] = useState<Transaction | null>(null);
   const [error, setError] = useState("");
@@ -42,6 +64,7 @@ export default function App() {
           beneficiary: String(data.get("beneficiary")),
           beneficiaryAccount: String(data.get("account")),
           demoScenario: scenario,
+          ...signals,
           ...audioPayload,
         }),
       );
@@ -106,13 +129,72 @@ export default function App() {
             Demo scenario
             <select
               value={scenario}
-              onChange={(event) => setScenario(event.target.value as Scenario)}
+              onChange={(event) => {
+                const nextScenario = event.target.value as Scenario;
+                setScenario(nextScenario);
+                setSignals(scenarioSignals[nextScenario]);
+              }}
             >
               <option value="legitimate">Legitimate</option>
               <option value="suspicious">Suspicious</option>
               <option value="deepfake_attack">Deepfake attack</option>
             </select>
           </label>
+          <fieldset className="risk-signals">
+            <legend>Transaction risk signals</legend>
+            <label>
+              <input
+                type="checkbox"
+                checked={signals.isNewBeneficiary}
+                onChange={(event) =>
+                  setSignals({
+                    ...signals,
+                    isNewBeneficiary: event.target.checked,
+                  })
+                }
+              />{" "}
+              New beneficiary
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                checked={signals.isUnusualTime}
+                onChange={(event) =>
+                  setSignals({
+                    ...signals,
+                    isUnusualTime: event.target.checked,
+                  })
+                }
+              />{" "}
+              Unusual transaction time
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                checked={signals.isUnknownDevice}
+                onChange={(event) =>
+                  setSignals({
+                    ...signals,
+                    isUnknownDevice: event.target.checked,
+                  })
+                }
+              />{" "}
+              Unknown device or session
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                checked={signals.urgencyDetected}
+                onChange={(event) =>
+                  setSignals({
+                    ...signals,
+                    urgencyDetected: event.target.checked,
+                  })
+                }
+              />{" "}
+              Urgency language detected
+            </label>
+          </fieldset>
           <fieldset className="audio-input">
             <legend>Audio for Reality Defender</legend>
             <p>

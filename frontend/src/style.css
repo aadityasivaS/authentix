@@ -120,6 +120,24 @@ code {
   margin: 6px 0 12px;
   font-size: 0.9rem;
 }
+.risk-signals {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 8px;
+  border: 1px solid #344966;
+  border-radius: 8px;
+  padding: 12px;
+  color: #b9c7db;
+}
+.risk-signals label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.risk-signals input {
+  width: auto;
+  margin: 0;
+}
 .audio-input input {
   width: 100%;
   margin-bottom: 10px;
